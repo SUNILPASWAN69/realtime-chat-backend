@@ -1,0 +1,132 @@
+/* WRAPPER */
+.main-wrapper {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* LOGIN BOX */
+.login-box {
+  width: 350px;
+  margin: 120px auto;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  margin-top: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* CHAT LAYOUT */
+.chat-wrapper {
+  display: grid;
+  grid-template-columns: 25% 75%;
+  height: 88vh;
+  gap: 15px;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  border-right: 1px solid #ddd;
+  padding-right: 10px;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+}
+
+.user-item {
+  background: #f2f2f2;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: 10px;
+}
+
+/* CHAT MESSAGES */
+.messages-area {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-y: scroll;
+  background: #f9f9f9;
+}
+
+.chat-bubble {
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  max-width: 60%;
+  position: relative;
+}
+
+.chat-bubble.me {
+  background: #cbffc9;
+  margin-left: auto;
+}
+
+.chat-bubble.other {
+  background: white;
+  border: 1px solid #ddd;
+  margin-right: auto;
+}
+
+.chat-bubble .time {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* MESSAGE INPUT */
+.input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.input-area button {
+  padding: 12px 20px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
