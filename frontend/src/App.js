@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
-const socket = io("https://realtime-chat-backend-2.onrender.com");
+// const socket = io("https://realtime-chat-backend-2.onrender.com");
+const socket = io("https://realtime-chat-backend-2.onrender.com/", {
+  transports: ["websocket"]
+});
+
 
 function App() {
   const [username, setUsername] = useState("");
