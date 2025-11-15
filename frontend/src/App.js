@@ -59,10 +59,15 @@ return (
       <div className="login-box">
         <h2>Enter Username</h2>
 
-        <input
-          type="text"
-          placeholder="Enter your name..."
-          onChange={(e) => setUsername(e.target.value)}
+       <input
+        type="text"
+        placeholder="Enter your name..."
+        onChange={(e) => setUsername(e.target.value)}
+        onKeyDown={(e) => {
+        if (e.key === "Enter") {
+            joinChat();
+          }
+        }}
         />
 
         <button onClick={joinChat}>Join</button>
@@ -106,14 +111,24 @@ return (
           </div>
 
           <div className="input-area">
-            <input
-              type="text"
-              value={message}
-              placeholder="Type a message..."
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button onClick={sendMessage}>Send</button>
-          </div>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendMessage();
+                }}
+                style={{ display: "flex", width: "100%" }}
+              >
+                <input
+                  type="text"
+                  value={message}
+                  placeholder="Type a message..."
+                  onChange={(e) => setMessage(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+
+                <button type="submit">Send</button>
+              </form>
+            </div>
         </div>
 
       </div>
