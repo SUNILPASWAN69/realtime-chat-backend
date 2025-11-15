@@ -15,6 +15,26 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const joinChat = () => {
+    if (username.trim() !== "") {
+      setLoggedInUser(username);
+      socket.emit("join", username); // MUST MATCH BACKEND
+    }
+  };
+
+   const sendMessage = () => {
+    if (message.trim() !== "") {
+      const msgData = {
+        user: loggedInUser,
+        text: message,
+        time: new Date().toLocaleTimeString(),
+      };
+
+      socket.emit("send_message", msgData);
+      setMessage("");
+    }
+  };
+
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
@@ -31,25 +51,6 @@ function App() {
     };
   }, []);
 
-  const joinChat = () => {
-    if (!username.trim()) return;
-
-    setLoggedInUser(username);
-    socket.emit("user_joined", username); // <-- IMPORTANT FIX
-  };
-
-  const sendMessage = () => {
-    if (!message.trim()) return;
-
-    const msgData = {
-      user: loggedInUser,
-      text: message,
-      time: new Date().toLocaleTimeString()
-    };
-
-    socket.emit("send_message", msgData);
-    setMessage("");
-  };
 
 return (
   <div className="main-wrapper">
@@ -122,5 +123,4 @@ return (
 );
 
 }
-
 export default App;
