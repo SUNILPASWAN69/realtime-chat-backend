@@ -1,5 +1,3 @@
-// backend/server.js
-
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -77,14 +75,12 @@ server.listen(5000, () => {
 // io.on("connection", (socket) => {
 //   console.log("User connected:", socket.id);
 
-//   // USER JOINS
 //   socket.on("join", (username) => {
 //     onlineUsers[socket.id] = username;
 
 //     // Send simple list (frontend ke hisab se)
 //     io.emit("online_users", Object.values(onlineUsers));
 
-//     // Send detailed list for call logic (frontend me add kar lena)
 //     io.emit(
 //       "online_users_detailed",
 //       Object.entries(onlineUsers).map(([id, name]) => ({
@@ -94,14 +90,11 @@ server.listen(5000, () => {
 //     );
 //   });
 
-//   // CHAT MESSAGE
 //   socket.on("send_message", (data) => {
 //     io.emit("receive_message", data);
 //   });
 
-//   // 🔥 CALL LOGIC BELOW 🔥
 
-//   // CALL REQUEST
 //   socket.on("call-user", ({ toSocketId, fromUser }) => {
 //     io.to(toSocketId).emit("incoming-call", {
 //       fromSocketId: socket.id,
@@ -109,7 +102,6 @@ server.listen(5000, () => {
 //     });
 //   });
 
-//   // OFFER
 //   socket.on("send-offer", ({ toSocketId, offer }) => {
 //     io.to(toSocketId).emit("receive-offer", {
 //       fromSocketId: socket.id,
@@ -117,7 +109,6 @@ server.listen(5000, () => {
 //     });
 //   });
 
-//   // ANSWER
 //   socket.on("send-answer", ({ toSocketId, answer }) => {
 //     io.to(toSocketId).emit("receive-answer", {
 //       fromSocketId: socket.id,
@@ -125,7 +116,6 @@ server.listen(5000, () => {
 //     });
 //   });
 
-//   // ICE CANDIDATE
 //   socket.on("send-ice", ({ toSocketId, candidate }) => {
 //     io.to(toSocketId).emit("receive-ice", {
 //       fromSocketId: socket.id,
@@ -133,12 +123,10 @@ server.listen(5000, () => {
 //     });
 //   });
 
-//   // END CALL
 //   socket.on("end-call", ({ toSocketId }) => {
 //     io.to(toSocketId).emit("call-ended");
 //   });
 
-//   // DISCONNECT
 //   socket.on("disconnect", () => {
 //     delete onlineUsers[socket.id];
 
