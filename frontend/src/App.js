@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
-// BACKEND URL
 const socket = io("https://realtime-chat-backend-2.onrender.com/");
 // const socket = io("http://localhost:5000");
 
@@ -14,7 +13,6 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  // Voice recording states
   const [recording, setRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -81,10 +79,8 @@ function App() {
         time: new Date().toLocaleTimeString(),
       };
 
-      // emit to backend
       socket.emit("voice_message", voiceObj);
 
-      // local append so sender also sees it
       setMessages((prev) => [...prev, voiceObj]);
 
       setShowPreview(false);
@@ -116,8 +112,7 @@ function App() {
 
     socket.emit("send_message", msgObj);
 
-    // ❌ DO NOT locally append — duplication hoti thi yaha se
-    // setMessages((prev) => [...prev, msgObj]);
+
 
     setMessage("");
   };
@@ -165,7 +160,6 @@ function App() {
         </div>
       ) : (
         <div className="chat-wrapper">
-          {/* LEFT PANEL */}
           <div className="left-panel">
             <h3>Online Users</h3>
             <ul className="user-list">
@@ -175,7 +169,6 @@ function App() {
             </ul>
           </div>
 
-          {/* RIGHT PANEL */}
           <div className="right-panel">
             <h3 className="header">Logged in as: {loggedInUser}</h3>
 
@@ -190,10 +183,8 @@ function App() {
                   <strong>{msg.user}</strong>
                   <br />
 
-                  {/* TEXT */}
                   {msg.text && <div>{msg.text}</div>}
 
-                  {/* VOICE */}
                   {msg.audio && (
                     <audio
                       controls
@@ -207,7 +198,6 @@ function App() {
               ))}
             </div>
 
-            {/* INPUT SECTION */}
             <div className="input-area">
               <form
                 onSubmit={(e) => {
@@ -226,7 +216,6 @@ function App() {
                 <button type="submit">Send</button>
               </form>
 
-              {/* RECORD BUTTON */}
               <button
                 onMouseDown={startRecording}
                 onMouseUp={stopRecording}
@@ -241,7 +230,6 @@ function App() {
                 🎤 {recording ? "Recording..." : "Hold to Record"}
               </button>
 
-              {/* PREVIEW BOX */}
               {showPreview && recordedAudio && (
                 <div
                   style={{
