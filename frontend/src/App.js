@@ -2,8 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
+<<<<<<< HEAD
 // const socket = io("https://realtime-chat-backend-2.onrender.com");
 const socket = io("http://localhost:5000");
+=======
+const socket = io("https://realtime-chat-backend-2.onrender.com/");
+// const socket = io("http://localhost:5000");
+
+>>>>>>> 38f570cee91dcbb5d4fb74630464bcaee8d264c7
 
 function App() {
   const [username, setUsername] = useState("");
@@ -12,7 +18,10 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
+<<<<<<< HEAD
   // Voice recording states
+=======
+>>>>>>> 38f570cee91dcbb5d4fb74630464bcaee8d264c7
   const [recording, setRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -79,10 +88,15 @@ function App() {
         time: new Date().toLocaleTimeString(),
       };
 
+<<<<<<< HEAD
       // emit to backend
       socket.emit("voice_message", voiceObj);
 
       // local append so sender also sees it
+=======
+      socket.emit("voice_message", voiceObj);
+
+>>>>>>> 38f570cee91dcbb5d4fb74630464bcaee8d264c7
       setMessages((prev) => [...prev, voiceObj]);
 
       setShowPreview(false);
@@ -114,8 +128,12 @@ function App() {
 
     socket.emit("send_message", msgObj);
 
+<<<<<<< HEAD
     // ❌ DO NOT locally append — duplication hoti thi yaha se
     // setMessages((prev) => [...prev, msgObj]);
+=======
+
+>>>>>>> 38f570cee91dcbb5d4fb74630464bcaee8d264c7
 
     setMessage("");
   };
@@ -163,7 +181,6 @@ function App() {
         </div>
       ) : (
         <div className="chat-wrapper">
-          {/* LEFT PANEL */}
           <div className="left-panel">
             <h3>Online Users</h3>
             <ul className="user-list">
@@ -224,7 +241,10 @@ function App() {
                 <button type="submit">Send</button>
               </form>
 
+<<<<<<< HEAD
               {/* RECORD BUTTON */}
+=======
+>>>>>>> 38f570cee91dcbb5d4fb74630464bcaee8d264c7
               <button
                 onMouseDown={startRecording}
                 onMouseUp={stopRecording}
@@ -239,7 +259,10 @@ function App() {
                 🎤 {recording ? "Recording..." : "Hold to Record"}
               </button>
 
+<<<<<<< HEAD
               {/* PREVIEW BOX */}
+=======
+>>>>>>> 38f570cee91dcbb5d4fb74630464bcaee8d264c7
               {showPreview && recordedAudio && (
                 <div
                   style={{
