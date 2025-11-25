@@ -17,7 +17,7 @@
 }
 
 .login-box input {
-  width: 100%;
+  width: 92%;
   padding: 12px;
   font-size: 16px;
   margin-top: 10px;
@@ -110,7 +110,7 @@
 
 /* MESSAGE INPUT */
 .input-area {
-  display: flex;
+  display: block;
   gap: 10px;
   margin-top: 10px;
 }

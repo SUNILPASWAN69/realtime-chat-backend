@@ -2,16 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
-<<<<<<< HEAD
-// const socket = io("http://localhost:5000");
-const socket = io("https://realtime-chat-backend-2.onrender.com");
-=======
 // const socket = io("https://realtime-chat-backend-2.onrender.com");
-const socket = io("https://realtime-chat-backend-2.onrender.com/", {
-  transports: ["websocket"]
-});
-
->>>>>>> 0adfe8ee31bb0aac68410646fdf49a489d755434
+const socket = io("http://localhost:5000");
 
 function App() {
   const [username, setUsername] = useState("");
@@ -20,40 +12,58 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-<<<<<<< HEAD
+  // Voice recording states
   const [recording, setRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
 
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
+  const streamRef = useRef(null);
+
+  // ------------------- VOICE RECORDING LOGIC -------------------
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
 
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    chunksRef.current = [];
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
 
-    mediaRecorder.start();
-    setRecording(true);
+      mediaRecorder.start();
+      setRecording(true);
 
-    mediaRecorder.ondataavailable = (e) => {
-      chunksRef.current.push(e.data);
-    };
+      mediaRecorder.ondataavailable = (e) => {
+        chunksRef.current.push(e.data);
+      };
 
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-      const url = URL.createObjectURL(blob);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
 
-      setRecordedAudio({ blob, url });
-      setShowPreview(true);
+        setRecordedAudio({ blob, url });
+        setShowPreview(true);
+        setRecording(false);
+
+        // Stop mic
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((t) => t.stop());
+          streamRef.current = null;
+        }
+      };
+    } catch (err) {
+      console.log("Mic error: ", err);
       setRecording(false);
-    };
+    }
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current) {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "inactive"
+    ) {
       mediaRecorderRef.current.stop();
     }
   };
@@ -63,11 +73,17 @@ function App() {
     reader.readAsDataURL(recordedAudio.blob);
 
     reader.onloadend = () => {
-      socket.emit("voice_message", {
+      const voiceObj = {
         user: loggedInUser,
         audio: reader.result,
         time: new Date().toLocaleTimeString(),
-      });
+      };
+
+      // emit to backend
+      socket.emit("voice_message", voiceObj);
+
+      // local append so sender also sees it
+      setMessages((prev) => [...prev, voiceObj]);
 
       setShowPreview(false);
       setRecordedAudio(null);
@@ -79,35 +95,32 @@ function App() {
     setRecordedAudio(null);
   };
 
+  // ------------------- TEXT MESSAGE LOGIC -------------------
+
   const joinChat = () => {
-    if (username.trim() !== "") {
-      setLoggedInUser(username);
-      socket.emit("join", username);
-    }
+    if (!username.trim()) return;
+    setLoggedInUser(username.trim());
+    socket.emit("join", username.trim());
   };
 
   const sendMessage = () => {
-=======
-  const joinChat = () => {
-    if (username.trim() !== "") {
-      setLoggedInUser(username);
-      socket.emit("join", username); // MUST MATCH BACKEND
-    }
+    if (!message.trim()) return;
+
+    const msgObj = {
+      user: loggedInUser,
+      text: message.trim(),
+      time: new Date().toLocaleTimeString(),
+    };
+
+    socket.emit("send_message", msgObj);
+
+    // ❌ DO NOT locally append — duplication hoti thi yaha se
+    // setMessages((prev) => [...prev, msgObj]);
+
+    setMessage("");
   };
 
-   const sendMessage = () => {
->>>>>>> 0adfe8ee31bb0aac68410646fdf49a489d755434
-    if (message.trim() !== "") {
-      const msgData = {
-        user: loggedInUser,
-        text: message,
-        time: new Date().toLocaleTimeString(),
-      };
-
-      socket.emit("send_message", msgData);
-      setMessage("");
-    }
-  };
+  // ------------------- SOCKET HANDLERS -------------------
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -129,7 +142,8 @@ function App() {
     };
   }, []);
 
-<<<<<<< HEAD
+  // ------------------- UI -------------------
+
   return (
     <div className="main-wrapper">
       {!loggedInUser ? (
@@ -146,46 +160,6 @@ function App() {
           />
 
           <button onClick={joinChat}>Join</button>
-=======
-
-return (
-  <div className="main-wrapper">
-
-    {!loggedInUser ? (
-      <div className="login-box">
-        <h2>Enter Username</h2>
-
-       <input
-        type="text"
-        placeholder="Enter your name..."
-        onChange={(e) => setUsername(e.target.value)}
-        onKeyDown={(e) => {
-        if (e.key === "Enter") {
-            joinChat();
-          }
-        }}
-        />
-
-        <button onClick={joinChat}>Join</button>
-      </div>
-    ) : (
-
-      <div className="chat-wrapper">
-
-        {/* LEFT PANEL */}
-        <div className="left-panel">
-          <h3>Online Users</h3>
-
-          <ul className="user-list">
-            {onlineUsers.length > 0 ? (
-              onlineUsers.map((u, i) => (
-                <li key={i} className="user-item">{u}</li>
-              ))
-            ) : (
-              <li className="user-item">No one online</li>
-            )}
-          </ul>
->>>>>>> 0adfe8ee31bb0aac68410646fdf49a489d755434
         </div>
       ) : (
         <div className="chat-wrapper">
@@ -199,6 +173,7 @@ return (
             </ul>
           </div>
 
+          {/* RIGHT PANEL */}
           <div className="right-panel">
             <h3 className="header">Logged in as: {loggedInUser}</h3>
 
@@ -213,10 +188,16 @@ return (
                   <strong>{msg.user}</strong>
                   <br />
 
+                  {/* TEXT */}
                   {msg.text && <div>{msg.text}</div>}
 
+                  {/* VOICE */}
                   {msg.audio && (
-                    <audio controls src={msg.audio} style={{ marginTop: "5px" }} />
+                    <audio
+                      controls
+                      src={msg.audio}
+                      style={{ marginTop: "5px", maxWidth: "100%" }}
+                    />
                   )}
 
                   <div className="time">{msg.time}</div>
@@ -224,13 +205,14 @@ return (
               ))}
             </div>
 
+            {/* INPUT SECTION */}
             <div className="input-area">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   sendMessage();
                 }}
-                style={{ display: "flex", width: "100%" }}
+                style={{ display: "flex", width: "100%" ,gap:"10px"}}
               >
                 <input
                   type="text"
@@ -242,7 +224,7 @@ return (
                 <button type="submit">Send</button>
               </form>
 
-<<<<<<< HEAD
+              {/* RECORD BUTTON */}
               <button
                 onMouseDown={startRecording}
                 onMouseUp={stopRecording}
@@ -257,28 +239,29 @@ return (
                 🎤 {recording ? "Recording..." : "Hold to Record"}
               </button>
 
-              {showPreview && (
+              {/* PREVIEW BOX */}
+              {showPreview && recordedAudio && (
                 <div
                   style={{
                     background: "#222",
-                    padding: "10px",
-                    marginTop: "10px",
-                    borderRadius: "10px",
+                    padding: 10,
+                    borderRadius: 10,
+                    marginTop: 10,
                     color: "#fff",
                   }}
                 >
-                  <p>Preview Voice Message:</p>
+                  <p>Preview Voice Message</p>
 
                   <audio controls src={recordedAudio.url}></audio>
 
-                  <div style={{ marginTop: "8px", display: "flex", gap: "10px" }}>
+                  <div style={{ marginTop: 8, display: "flex", gap: 10 }}>
                     <button
                       onClick={sendVoiceMessage}
                       style={{
                         padding: "6px 12px",
                         background: "green",
-                        color: "white",
-                        borderRadius: "5px",
+                        color: "#fff",
+                        borderRadius: 5,
                       }}
                     >
                       Send ✔
@@ -289,8 +272,8 @@ return (
                       style={{
                         padding: "6px 12px",
                         background: "red",
-                        color: "white",
-                        borderRadius: "5px",
+                        color: "#fff",
+                        borderRadius: 5,
                       }}
                     >
                       Cancel ✖
@@ -300,30 +283,10 @@ return (
               )}
             </div>
           </div>
-=======
-          <div className="input-area">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendMessage();
-                }}
-                style={{ display: "flex", width: "100%" }}
-              >
-                <input
-                  type="text"
-                  value={message}
-                  placeholder="Type a message..."
-                  onChange={(e) => setMessage(e.target.value)}
-                  style={{ flex: 1 }}
-                />
-
-                <button type="submit">Send</button>
-              </form>
-            </div>
->>>>>>> 0adfe8ee31bb0aac68410646fdf49a489d755434
         </div>
       )}
     </div>
   );
 }
+
 export default App;

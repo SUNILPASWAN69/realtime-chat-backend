@@ -1,4 +1,3 @@
-// backend/server.js
 
 const express = require("express");
 const http = require("http");
@@ -22,14 +21,13 @@ let onlineUsers = {};
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-<<<<<<< HEAD
   //this Is fOr voice massegee
   socket.on("voice_message", (data) => {
     socket.broadcast.emit("receive_voice", data);
   });
 
-=======
->>>>>>> 0adfe8ee31bb0aac68410646fdf49a489d755434
+  
+
   socket.on("join", (username) => {
     console.log("User joined:", username);
 
@@ -37,17 +35,11 @@ io.on("connection", (socket) => {
 
     io.emit("online_users", Object.values(onlineUsers));
   });
-<<<<<<< HEAD
 
   socket.on("send_message", (data) => {
     io.emit("receive_message", data);
   });
 
-=======
-  socket.on("send_message", (data) => {
-    io.emit("receive_message", data);
-  });
->>>>>>> 0adfe8ee31bb0aac68410646fdf49a489d755434
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
 
@@ -58,7 +50,7 @@ io.on("connection", (socket) => {
 });
 
 server.listen(5000, () => {
-  console.log("Server running on port 5000");
+  console.log("Server running on port 5000.....");
 });
 
 // const express = require("express");
